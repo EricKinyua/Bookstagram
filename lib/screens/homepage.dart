@@ -159,48 +159,48 @@ class Homepage extends StatelessWidget {
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
-                                                              Row(
-                                children: <Widget>[
-                                  IconButton(
-                                    icon: Icon(Icons.favorite_border),
-                                    iconSize: 30,
-                                    onPressed: () => print('Like Post'),
+                                  Row(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.favorite_border),
+                                        iconSize: 30,
+                                        onPressed: () => print('Like Post'),
+                                      ),
+                                      Text(
+                                        '2,515,',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  Text(
-                                    '2,515,',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                  width: 20,
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  IconButton(
-                                    icon: Icon(Icons.chat),
-                                    iconSize: 30,
-                                    onPressed: () => print('Comment'),
+                                  SizedBox(
+                                    width: 20,
                                   ),
-                                  Text(
-                                    '350',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  Row(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.chat),
+                                        iconSize: 30,
+                                        onPressed: () => print('Comment'),
+                                      ),
+                                      Text(
+                                        '350',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
                                 ],
                               ),
                               IconButton(
-                                icon: Icon(Icons.bookmark_border), 
+                                icon: Icon(Icons.bookmark_border),
                                 iconSize: 30,
                                 onPressed: () => print('Save Post'),
-                                ),
+                              ),
                             ],
                           ),
                         )
@@ -218,64 +218,59 @@ class Homepage extends StatelessWidget {
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
         ),
-              child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: [
-           BottomNavigationBarItem(
-             icon: Icon(
-               Icons.dashboard,
-               size: 30,
-               color: Colors.black,
-             ),
-             title: Text('data'),
-             ),
-             BottomNavigationBarItem(
-             icon: Icon(
-               Icons.search,
-               size: 30,
-               color: Colors.grey,
-             ),
-             title: Text('data'),
-             ),
-              BottomNavigationBarItem(
-             icon: Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 5,
-               vertical: 10
-               ),
-               child: FlatButton(
-                 padding: EdgeInsets.symmetric(vertical: 10),
-                 shape: RoundedRectangleBorder(
-                   borderRadius: BorderRadius.circular(30),
-
-                 ),
-                 color: Color(0xFF23B66F),
-                 onPressed: () => print('Upload photo'),
-                 child: Icon(
-                   Icons.add,
-                   size: 35,
-                   color: Colors.white,
-                 ),
-                 ),
-             ),
-             title: Text('data'),
-             ),
-             BottomNavigationBarItem(
-             icon: Icon(
-               Icons.favorite_border,
-               size: 30,
-               color: Colors.grey,
-             ),
-             title: Text('data'),
-             ),
-             BottomNavigationBarItem(
-             icon: Icon(
-               Icons.person_outline,
-               size: 30,
-               color: Colors.grey,
-             ),
-             title: Text('data'),
-             ),
-          ]),
+        child: BottomNavigationBar(type: BottomNavigationBarType.fixed, items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.dashboard,
+              size: 30,
+              color: Colors.black,
+            ),
+            title: Text('data'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+              size: 30,
+              color: Colors.grey,
+            ),
+            title: Text('data'),
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              child: FlatButton(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                color: Color(0xFF23B66F),
+                onPressed: () => print('Upload photo'),
+                child: Icon(
+                  Icons.add,
+                  size: 35,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            title: Text('data'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.favorite_border,
+              size: 30,
+              color: Colors.grey,
+            ),
+            title: Text('data'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person_outline,
+              size: 30,
+              color: Colors.grey,
+            ),
+            title: Text('data'),
+          ),
+        ]),
       ),
     );
   }
