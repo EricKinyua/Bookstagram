@@ -1,4 +1,6 @@
+import 'package:Bookstagram/screens/comments.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Homepage extends StatelessWidget {
   @override
@@ -13,13 +15,7 @@ class Homepage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(
-                  'Bookstagram',
-                  style: TextStyle(
-                    fontFamily: 'Billabong',
-                    fontSize: 32,
-                  ),
-                ),
+                Text('Bookstagram', style: GoogleFonts.yellowtail()),
                 Row(
                   children: <Widget>[
                     IconButton(
@@ -132,23 +128,33 @@ class Homepage extends StatelessWidget {
                             onPressed: () => print('More'),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          width: double.infinity,
-                          height: 400,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black45,
-                                offset: Offset(0, 5),
-                                blurRadius: 8,
+                        InkWell(
+                          onDoubleTap: () => print('Like Post'),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => Comments(),
+                                ));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            width: double.infinity,
+                            height: 400,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black45,
+                                  offset: Offset(0, 5),
+                                  blurRadius: 8,
+                                ),
+                              ],
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                    'https://images.unsplash.com/photo-1534523600533-71d091d911d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'),
+                                fit: BoxFit.fitWidth,
                               ),
-                            ],
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://images.unsplash.com/photo-1534523600533-71d091d911d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'),
-                              fit: BoxFit.fitWidth,
                             ),
                           ),
                         ),
@@ -181,10 +187,15 @@ class Homepage extends StatelessWidget {
                                   Row(
                                     children: <Widget>[
                                       IconButton(
-                                        icon: Icon(Icons.chat),
-                                        iconSize: 30,
-                                        onPressed: () => print('Comment'),
-                                      ),
+                                          icon: Icon(Icons.chat),
+                                          iconSize: 30,
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (_) => Comments(),
+                                                ));
+                                          }),
                                       Text(
                                         '350',
                                         style: TextStyle(
