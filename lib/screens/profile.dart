@@ -30,7 +30,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24))),
       child: Column(
-        children: [bacgroundImage(size), Expanded(child: Container())],
+        children: [
+          bacgroundImage(size),
+          Expanded(
+              child: Container(
+            padding: EdgeInsets.only(top: 250),
+            color: Colors.yellow,
+          ))
+        ],
       ),
     );
   }
@@ -71,6 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Container(
         height: 250,
+        padding: EdgeInsets.all(12),
         width: size.width,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),
         child: Column(

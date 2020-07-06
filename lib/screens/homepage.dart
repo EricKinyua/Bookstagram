@@ -2,6 +2,7 @@ import 'package:Bookstagram/screens/dashboard.dart';
 import 'package:Bookstagram/screens/likes.dart';
 import 'package:Bookstagram/screens/profile.dart';
 import 'package:Bookstagram/screens/search.dart';
+import 'package:Bookstagram/widgets/custom_fab.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -95,10 +96,7 @@ class _HomepageState extends State<Homepage> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: CustomFab(),
     );
   }
 }
