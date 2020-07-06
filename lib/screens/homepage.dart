@@ -1,44 +1,53 @@
-import 'package:Bookstagram/models/single_post_model.dart';
-import 'package:Bookstagram/widgets/singlePost.dart';
+import 'package:Bookstagram/screens/dashboard.dart';
+import 'package:Bookstagram/screens/likes.dart';
+import 'package:Bookstagram/screens/profile.dart';
+import 'package:Bookstagram/screens/search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   static BottomNavigationBarItem _bottomNavItem(String title, IconData icon) {
     return BottomNavigationBarItem(
         icon: Icon(
           icon,
-          size: 30,
+          size: 24,
           color: Colors.black,
+        ),
+        activeIcon: Icon(
+          icon,
+          size: 30,
+          color: Colors.blue,
         ),
         title: Text(title));
   }
 
-  static List<BottomNavigationBarItem> items = [
-    _bottomNavItem('Home', Icons.dashboard),
-    _bottomNavItem('Search', Icons.search),
-    BottomNavigationBarItem(
-      icon: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-        child: FlatButton(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          color: Color(0xFF23B66F),
-          onPressed: () => print('Upload photo'),
-          child: Icon(
-            Icons.add,
-            size: 35,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      title: Text(''),
-    ),
-    _bottomNavItem('Likes', Icons.favorite_border),
-    _bottomNavItem('Profile', Icons.person_outline),
+  @override
+  _HomepageState createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  int _page = 0;
+  PageController _controller;
+
+  List<BottomNavigationBarItem> items = [
+    Homepage._bottomNavItem('Home', Icons.dashboard),
+    Homepage._bottomNavItem('Search', Icons.search),
+    Homepage._bottomNavItem('Likes', Icons.favorite_border),
+    Homepage._bottomNavItem('Profile', Icons.person_outline),
   ];
+
+  List<Widget> _pages = [
+    DashboardScreen(),
+    SearchScreen(),
+    LikesScreen(),
+    ProfileScreen(),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController(initialPage: 0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +70,11 @@ class Homepage extends StatelessWidget {
         ],
       ),
       backgroundColor: Color(0xFFEDF0F6),
-      body: ListView.builder(
-        addAutomaticKeepAlives: false,
-        itemCount: posts.length,
-        itemBuilder: (context, index) => SinglePostWidget(model: posts[index]),
+      body: PageView(
+        children: _pages,
+        controller: _controller,
+        physics: NeverScrollableScrollPhysics(),
+        pageSnapping: true,
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.only(
@@ -72,7 +82,22 @@ class Homepage extends StatelessWidget {
           topRight: Radius.circular(30),
         ),
         child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed, items: items),
+          type: BottomNavigationBarType.fixed,
+          items: items,
+          currentIndex: _page,
+          onTap: (value) {
+            setState(() {
+              _page = value;
+              _controller.animateToPage(_page,
+                  duration: Duration(milliseconds: 200),
+                  curve: Curves.easeInOut);
+            });
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: null,
+        child: Icon(Icons.add),
       ),
     );
   }
