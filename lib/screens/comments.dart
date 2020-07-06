@@ -1,220 +1,127 @@
+import 'package:Bookstagram/models/single_comment_model.dart';
+import 'package:Bookstagram/models/single_user_model.dart';
 import 'package:flutter/material.dart';
 
 class Comments extends StatefulWidget {
+  final List<SingleCommentModel> model;
+  final SingleUserModel user;
+  Comments({@required this.model, @required this.user});
+
   @override
   _CommentsState createState() => _CommentsState();
 }
 
 class _CommentsState extends State<Comments> {
+  Widget singlePost(SingleCommentModel comment) {
+    return ListTile(
+      leading: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+          BoxShadow(
+            color: Colors.black45,
+            offset: Offset(0, 2),
+            blurRadius: 6,
+          )
+        ]),
+        child: CircleAvatar(
+          child: ClipOval(
+            child: Image(
+              height: 50,
+              width: 50,
+              image: NetworkImage(comment.user.photoUrl),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+      title: Text(
+        comment.user.name,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(comment.text),
+      trailing: IconButton(
+          icon: Icon(Icons.favorite_border),
+          color: Colors.grey,
+          onPressed: () => print('Like Comment')),
+    );
+  }
+
+  Widget newComment() {
+    return TextField(
+      decoration: InputDecoration(
+          border: InputBorder.none,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          contentPadding: EdgeInsets.all(20),
+          hintText: 'Add a comment',
+          prefixIcon: Container(
+            margin: EdgeInsets.all(4),
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+              BoxShadow(
+                color: Colors.black45,
+                offset: Offset(0, 2),
+                blurRadius: 6,
+              )
+            ]),
+            child: CircleAvatar(
+              child: ClipOval(
+                child: Image(
+                  height: 50,
+                  width: 50,
+                  image: NetworkImage(widget.user.photoUrl),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          suffixIcon: Container(
+            margin: EdgeInsets.only(right: 4),
+            width: 70,
+            child: FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              color: Color(0xFF23B66F),
+              onPressed: () => print('Post Comment'),
+              child: Icon(
+                Icons.send,
+                size: 25,
+                color: Colors.white,
+              ),
+            ),
+          )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFEDF0F6),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       backgroundColor: Color(0xFFEDF0F6),
-      body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 40),
-              width: double.infinity,
-              height: 600,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.arrow_back),
-                              iconSize: 30,
-                              color: Colors.black,
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: ListTile(
-                                leading: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black45,
-                                          offset: Offset(0, 2),
-                                          blurRadius: 6,
-                                        )
-                                      ]),
-                                  child: CircleAvatar(
-                                    child: ClipOval(
-                                      child: Image(
-                                        height: 50,
-                                        width: 50,
-                                        image: NetworkImage(
-                                            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                title: Text(
-                                  'Eric Kinyua',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.more_horiz),
-                                  color: Colors.black,
-                                  onPressed: () => print('More'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        InkWell(
-                          onDoubleTap: () => print('Like Post'),
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            width: double.infinity,
-                            height: 400,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black45,
-                                  offset: Offset(0, 5),
-                                  blurRadius: 8,
-                                ),
-                              ],
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1534523600533-71d091d911d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'),
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.favorite_border),
-                                        iconSize: 30,
-                                        onPressed: () => print('Like Post'),
-                                      ),
-                                      Text(
-                                        '2,515,',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      IconButton(
-                                          icon: Icon(Icons.chat),
-                                          iconSize: 30,
-                                          onPressed: () {
-                                            print('Chat');
-                                          }),
-                                      Text(
-                                        '350',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.bookmark_border),
-                                iconSize: 30,
-                                onPressed: () => print('Save Post'),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              width: double.infinity,
-              height: 600,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  )),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: ListTile(
-                      leading: Container(
-                        width: 50,
-                        height: 50,
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                          BoxShadow(
-                            color: Colors.black45,
-                            offset: Offset(0, 2),
-                            blurRadius: 6,
-                          )
-                        ]),
-                        child: CircleAvatar(
-                          child: ClipOval(
-                            child: Image(
-                              height: 50,
-                              width: 50,
-                              image: NetworkImage(
-                                  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      title: Text(
-                        'Eric',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text('Great Read'),
-                      trailing: IconButton(
-                          icon: Icon(Icons.favorite_border),
-                          color: Colors.grey,
-                          onPressed: () => print('Like Comment')),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: ListView.builder(
+          itemCount: widget.model.length,
+          itemBuilder: (context, index) => singlePost(widget.model[index]),
         ),
       ),
       bottomNavigationBar: Transform.translate(
@@ -234,60 +141,7 @@ class _CommentsState extends State<Comments> {
           ),
           child: Padding(
             padding: EdgeInsets.all(12.0),
-            child: TextField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  contentPadding: EdgeInsets.all(20),
-                  hintText: 'Add a comment',
-                  prefixIcon: Container(
-                    margin: EdgeInsets.all(4),
-                    width: 48,
-                    height: 48,
-                    decoration:
-                        BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                      BoxShadow(
-                        color: Colors.black45,
-                        offset: Offset(0, 2),
-                        blurRadius: 6,
-                      )
-                    ]),
-                    child: CircleAvatar(
-                      child: ClipOval(
-                        child: Image(
-                          height: 50,
-                          width: 50,
-                          image: NetworkImage(
-                              'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  suffixIcon: Container(
-                    margin: EdgeInsets.only(right: 4),
-                    width: 70,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      color: Color(0xFF23B66F),
-                      onPressed: () => print('Post Comment'),
-                      child: Icon(
-                        Icons.send,
-                        size: 25,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )),
-            ),
+            child: newComment(),
           ),
         ),
       ),

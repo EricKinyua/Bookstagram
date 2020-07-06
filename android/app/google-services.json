@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "669674617522",
+    "firebase_url": "https://bookstagram-ea9bf.firebaseio.com",
+    "project_id": "bookstagram-ea9bf",
+    "storage_bucket": "bookstagram-ea9bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669674617522:android:62afeff9785e0a034627ab",
+        "android_client_info": {
+          "package_name": "com.books.gram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669674617522-ugvi7kjhtjhfn8i43a45eaij56ann41i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3nW8aNa7K1lLycDWPHyBah67XnkTCp90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669674617522-ugvi7kjhtjhfn8i43a45eaij56ann41i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
