@@ -44,4 +44,4 @@ app.*.map.json
 
 
 # Google Services JSON
-/android/app/google-services.json
+android/app/google-services.json
