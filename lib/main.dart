@@ -1,3 +1,5 @@
+import 'package:Bookstagram/screens/Authentication/SignUp.dart';
+import 'package:Bookstagram/screens/Authentication/login.dart';
 import 'package:flutter/material.dart';
 import 'package:Bookstagram/screens/homepage.dart';
 
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Homepage(),
+      home: SignUp(),
     );
   }
 }
