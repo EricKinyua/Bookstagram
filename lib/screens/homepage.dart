@@ -53,23 +53,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFEDF0F6),
-        elevation: 0,
-        title: Text('Bookstagram',
-            style: GoogleFonts.yellowtail(
-              color: Colors.black,
-              fontSize: 30,
-            )),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.send,
-                color: Colors.black,
-              ),
-              onPressed: null)
-        ],
-      ),
       backgroundColor: Color(0xFFEDF0F6),
       body: PageView(
         children: _pages,

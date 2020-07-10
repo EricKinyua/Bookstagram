@@ -35,7 +35,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Expanded(
               child: Container(
             padding: EdgeInsets.only(top: 250),
-            color: Colors.yellow,
           ))
         ],
       ),
@@ -118,12 +117,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _appBar() {
+    return AppBar(
+      backgroundColor: Color(0xFFEDF0F6),
+      elevation: 0,
+      title: Text('Bookstagram',
+          style: GoogleFonts.yellowtail(
+            color: Colors.black,
+            fontSize: 30,
+          )),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.settings,
+            color: Colors.black,
+          ),
+          onPressed: () => print('I want to see my DMs'),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Stack(
-      alignment: Alignment.center,
-      children: [backgroundStack(size), profileInfo(size)],
+    return Scaffold(
+      appBar: _appBar(),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [backgroundStack(size), profileInfo(size)],
+      ),
     );
   }
 }

@@ -1,7 +1,34 @@
+import 'package:Bookstagram/global/transitions.dart';
+import 'package:Bookstagram/screens/Authentication/SignUp.dart';
+import 'package:Bookstagram/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  static String _email;
+  static String _password;
+
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool hidePassword = true;
+
+  final FocusNode focusPassword = FocusNode();
+
+  final _formKey = GlobalKey<FormState>();
+
+  handleEmail(String value) {
+    Login._email = value.trim();
+    print('Email -> ${Login._email}');
+  }
+
+  handlePassword(String value) {
+    Login._password = value.trim();
+    print('Password -> ${Login._password}');
+  }
+
   Widget _intro() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,44 +52,135 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget _emailTextField() {
+  String validateEmail(String value) {
+    if (value.isEmpty) {
+      return 'Please enter an email';
+    }
+    if (!value.contains('@') || !value.contains('.')) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  String validatePassword(String value) {
+    if (value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 7) {
+      return 'Password is too short';
+    }
+    return null;
+  }
+
+  Widget _emailTextField(BuildContext context) {
     return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      onSaved: handleEmail,
+      validator: validateEmail,
+      onFieldSubmitted: (value) =>
+          FocusScope.of(context).requestFocus(focusPassword),
+      textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           labelText: 'Email address', labelStyle: GoogleFonts.quicksand()),
     );
   }
 
-  Widget _passwordTextfield() {
+  Widget _passwordTextfield(BuildContext context) {
     return TextFormField(
+      focusNode: focusPassword,
+      keyboardType: TextInputType.text,
+      validator: validatePassword,
+      onFieldSubmitted: (value) => FocusScope.of(context).unfocus(),
+      onSaved: handlePassword,
+      obscureText: hidePassword,
       decoration: InputDecoration(
           labelText: 'Password',
           labelStyle: GoogleFonts.quicksand(),
-          suffixIcon: Icon(
-            Icons.remove_red_eye,
+          suffixIcon: GestureDetector(
+            onTap: () {
+              setState(() {
+                hidePassword = !hidePassword;
+              });
+            },
+            child: Icon(
+              Icons.remove_red_eye,
+            ),
           )),
+    );
+  }
+
+  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 50.0,
+        width: 50.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              offset: Offset(0, 2),
+              blurRadius: 6.0,
+            ),
+          ],
+          image: DecorationImage(
+            image: logo,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSocialBtnRow() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          _buildSocialBtn(
+            () {},
+            AssetImage(
+              'assets/logos/facebook.jpg',
+            ),
+          ),
+          _buildSocialBtn(
+            () {},
+            AssetImage(
+              'assets/logos/google.png',
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _options() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Expanded(
-          child: RadioListTile(
-            value: false,
-            groupValue: null,
-            onChanged: null,
-            title: Text('Remember me'),
-            dense: true,
-          ),
-        ),
-        FlatButton(onPressed: null, child: Text('Forgot Password?'))
+        FlatButton(
+            onPressed: () => print('I want to reset my password'),
+            child: Text('Forgot Password?'))
       ],
     );
   }
 
+  _loginBtnPressed() {
+    final FormState form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => Homepage(),
+      ));
+    }
+  }
+
   Widget _loginButton(BuildContext context) {
     return MaterialButton(
-      onPressed: () => print('I want to login'),
+      onPressed: _loginBtnPressed,
       color: Colors.black.withOpacity(0.4),
       padding: EdgeInsets.all(12),
       minWidth: MediaQuery.of(context).size.width,
@@ -76,70 +194,76 @@ class Login extends StatelessWidget {
     );
   }
 
+  Widget _appBar() {
+    return AppBar(
+      backgroundColor: Color(0xFFEDF0F6),
+      elevation: 0,
+      leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: null),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFEDF0F6),
-      appBar: AppBar(
-        backgroundColor: Color(0xFFEDF0F6),
-        elevation: 0,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: null),
-      ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 60),
-          height: double.infinity,
-          width: MediaQuery.of(context).size.width,
+      appBar: _appBar(),
+      body: Container(
+        padding: EdgeInsets.only(left: 16, right: 16, top: 40),
+        height: double.infinity,
+        width: MediaQuery.of(context).size.width,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _intro(),
-                SizedBox(
-                  height: 30,
-                ),
-                _emailTextField(),
-                SizedBox(
-                  height: 20,
-                ),
-                _passwordTextfield(),
-                SizedBox(
-                  height: 10,
-                ),
-                _options(),
-                SizedBox(
-                  height: 20,
-                ),
-                _loginButton(context),
-                SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: Text(
-                    'Or Log in with',
-                    style: GoogleFonts.quicksand(),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _intro(),
+                  SizedBox(
+                    height: 30,
                   ),
-                ),
-                SizedBox(
-                  height: 100,
-                ),
-                Center(
-                  child: FlatButton(
-                      onPressed: () => print('Sign Up'),
-                      child: Text(
-                        'Sign Up here',
-                        style: GoogleFonts.quicksand(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      )),
-                )
-              ],
+                  _emailTextField(context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _passwordTextfield(context),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _options(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _loginButton(context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: Text(
+                      'Or Log in with',
+                      style: GoogleFonts.quicksand(),
+                    ),
+                  ),
+                  _buildSocialBtnRow(),
+                  Center(
+                    child: FlatButton(
+                        onPressed: () => Navigator.of(context)
+                            .push(SlideLeftTransition(page: SignUp())),
+                        child: Text(
+                          'Sign Up here',
+                          style: GoogleFonts.quicksand(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        )),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
