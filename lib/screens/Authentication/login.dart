@@ -1,6 +1,7 @@
 import 'package:Bookstagram/global/transitions.dart';
 import 'package:Bookstagram/screens/Authentication/SignUp.dart';
 import 'package:Bookstagram/screens/homepage.dart';
+import 'package:Bookstagram/widgets/social_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -109,53 +110,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 50.0,
-        width: 50.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-          image: DecorationImage(
-            image: logo,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () {},
-            AssetImage(
-              'assets/logos/facebook.jpg',
-            ),
-          ),
-          _buildSocialBtn(
-            () {},
-            AssetImage(
-              'assets/logos/google.png',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _options() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -251,7 +205,7 @@ class _LoginState extends State<Login> {
                       style: GoogleFonts.quicksand(),
                     ),
                   ),
-                  _buildSocialBtnRow(),
+                  SocialButtons(),
                   Center(
                     child: FlatButton(
                         onPressed: () => Navigator.of(context)

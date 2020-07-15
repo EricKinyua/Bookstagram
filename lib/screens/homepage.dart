@@ -1,10 +1,11 @@
+import 'package:Bookstagram/provider/auth_provider.dart';
 import 'package:Bookstagram/screens/dashboard.dart';
 import 'package:Bookstagram/screens/likes.dart';
 import 'package:Bookstagram/screens/profile.dart';
 import 'package:Bookstagram/screens/search.dart';
 import 'package:Bookstagram/widgets/custom_fab.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Homepage extends StatefulWidget {
   static BottomNavigationBarItem _bottomNavItem(String title, IconData icon) {
@@ -30,6 +31,8 @@ class _HomepageState extends State<Homepage> {
   int _page = 0;
   PageController _controller;
 
+  static dynamic currentUser;
+
   List<BottomNavigationBarItem> items = [
     Homepage._bottomNavItem('Home', Icons.dashboard),
     Homepage._bottomNavItem('Search', Icons.search),
@@ -52,6 +55,8 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    currentUser = Provider.of<AuthProvider>(context).currentUser;
+    print(currentUser.uid);
     return Scaffold(
       backgroundColor: Color(0xFFEDF0F6),
       body: PageView(

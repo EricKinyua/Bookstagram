@@ -3,6 +3,26 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
       allow read, write: if false;
+
+      function isUserAuthorised(user) {
+        return request.auth.uid == user;
+      }
+
+      function isUserValid(user) {
+        return exists(/databases/$(database)/documents/users/$(user));
+      }
+
+      function isPostCreator(user) {
+        return resource.data.author == user;
+      }
+
+      match /users/{user} {
+        allow create, get, update: if isUserAuthorised(user);
+      }
+      match /posts/{post} {
+        allow create: if isUserValid(request.resource.data.author);
+        allow update, delete: if isPostCreator(request.auth.uid);
+      }
     }
   }
 }

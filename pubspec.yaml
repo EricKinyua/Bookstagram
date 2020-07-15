@@ -12,6 +12,13 @@ dependencies:
     sdk: flutter
 
   google_fonts:
+  provider: 
+  firebase_auth:
+  firebase_analytics:
+  firebase_messaging:
+  google_sign_in:
+  cloud_firestore:
+  flutter_spinkit: 
   cupertino_icons: ^0.1.3
 
 dev_dependencies:

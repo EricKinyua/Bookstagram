@@ -26,5 +26,31 @@
     }
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.0/firebase-firestore.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAMYYZKN-dCNy_cKcvRssFpCXkSLy_Dd2s",
+      authDomain: "bookstagram-ea9bf.firebaseapp.com",
+      databaseURL: "https://bookstagram-ea9bf.firebaseio.com",
+      projectId: "bookstagram-ea9bf",
+      storageBucket: "bookstagram-ea9bf.appspot.com",
+      messagingSenderId: "669674617522",
+      appId: "1:669674617522:web:b6337fcb2aea145a4627ab",
+      measurementId: "G-X2JCLDLZ67"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 </body>
 </html>
