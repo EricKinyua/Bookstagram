@@ -26,12 +26,11 @@ class SingleUserModel {
   factory SingleUserModel.fromFirestore(DocumentSnapshot snapshot) {
     Map data = snapshot.data;
     return SingleUserModel(
-      email: data['email'],
-      name: data['name'],
-      username: data['username'],
-      photoUrl: data['photoUrl'],
-      uid: data['uid']
-    );
+        email: data['email'],
+        name: data['name'],
+        username: data['username'],
+        photoUrl: data['photoUrl'],
+        uid: data['uid']);
   }
 
   Map<String, dynamic> toFirestore() => {

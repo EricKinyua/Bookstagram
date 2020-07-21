@@ -1,14 +1,14 @@
 import 'package:Bookstagram/global/transitions.dart';
+import 'package:Bookstagram/global/utilities/dialogs.dart';
+import 'package:Bookstagram/models/single_user_model.dart';
+import 'package:Bookstagram/provider/auth_provider.dart';
 import 'package:Bookstagram/screens/Authentication/SignUp.dart';
-import 'package:Bookstagram/screens/homepage.dart';
 import 'package:Bookstagram/widgets/social_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
-  static String _email;
-  static String _password;
-
   @override
   _LoginState createState() => _LoginState();
 }
@@ -20,14 +20,21 @@ class _LoginState extends State<Login> {
 
   final _formKey = GlobalKey<FormState>();
 
+  static dynamic result;
+
+  static String _email;
+  static String _password;
+
+  static dynamic userProvider;
+
   handleEmail(String value) {
-    Login._email = value.trim();
-    print('Email -> ${Login._email}');
+    _email = value.trim();
+    print('Email -> $_email');
   }
 
   handlePassword(String value) {
-    Login._password = value.trim();
-    print('Password -> ${Login._password}');
+    _password = value.trim();
+    print('Password -> $_password');
   }
 
   Widget _intro() {
@@ -121,14 +128,45 @@ class _LoginState extends State<Login> {
     );
   }
 
+  Future<bool> serverCall(SingleUserModel user) async {
+    result = await userProvider.signInEmailPass(user);
+    print('This is the result: $result');
+
+    if (result == 'Invalid credentials. Please try again') {
+      return false;
+    } else if (result == "The email format entered is invalid") {
+      return false;
+    } else if (result == "Please register first") {
+      return false;
+    } else if (result == "Your account has been disabled") {
+      return false;
+    } else if (result == "Too many requests. Please try again in 2 minutes") {
+      return false;
+    } else if (result ==
+        "Please verify your email. We sent you an email earlier") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   _loginBtnPressed() {
     final FormState form = _formKey.currentState;
     if (form.validate()) {
       form.save();
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => Homepage(),
-      ));
+      SingleUserModel user =
+          new SingleUserModel(email: _email, password: _password);
+      serverCall(user).then((value) {
+        if (value) {
+          print(value);
+        } else {
+          dialogInfo(context, result);
+        }
+      }).catchError((error) {
+        print(error);
+        dialogInfo(context, error.toString());
+      });
     }
   }
 
@@ -152,17 +190,12 @@ class _LoginState extends State<Login> {
     return AppBar(
       backgroundColor: Color(0xFFEDF0F6),
       elevation: 0,
-      leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onPressed: null),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xFFEDF0F6),
       appBar: _appBar(),
@@ -195,7 +228,12 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     height: 20,
                   ),
-                  _loginButton(context),
+                  userProvider.status == Status.Authenticating
+                      ? Center(
+                          child: CircularProgressIndicator(
+                          backgroundColor: Theme.of(context).primaryColor,
+                        ))
+                      : _loginButton(context),
                   SizedBox(
                     height: 20,
                   ),

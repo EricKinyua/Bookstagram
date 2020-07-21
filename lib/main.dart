@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+        providers: [
+          Provider(create: (context) => AuthProvider.instance())
+        ],
+        child: MyApp()
+    ),);
 }
 
 class MyApp extends StatelessWidget {

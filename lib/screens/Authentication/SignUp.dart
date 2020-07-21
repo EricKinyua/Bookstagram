@@ -1,14 +1,11 @@
+import 'package:Bookstagram/global/utilities/dialogs.dart';
+import 'package:Bookstagram/models/single_user_model.dart';
+import 'package:Bookstagram/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
-  static String _firstName;
-  static String _lastName;
-  static String _userName;
-  static String _email;
-  static String _password;
-  static String _retypePassword;
-
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -17,14 +14,17 @@ class _SignUpState extends State<SignUp> {
   bool hidePassword = true;
 
   final FocusNode focusLastName = FocusNode();
-
   final FocusNode focusUserName = FocusNode();
-
   final FocusNode focusEmail = FocusNode();
-
   final FocusNode focusPassword = FocusNode();
-
   final FocusNode focusRetypePassword = FocusNode();
+
+  static String _firstName;
+  static String _lastName;
+  static String _userName;
+  static String _email;
+  static String _password;
+  static String _retypePassword;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -32,34 +32,38 @@ class _SignUpState extends State<SignUp> {
 
   final TextEditingController _confirmPass = TextEditingController();
 
+  static dynamic result;
+
+  dynamic userProvider;
+
   handleFirstName(String value) {
-    SignUp._firstName = value.trim();
-    print('First Name -> ${SignUp._firstName}');
+    _firstName = value.trim();
+    print('First Name -> $_firstName');
   }
 
   handleLastName(String value) {
-    SignUp._lastName = value.trim();
-    print('Last Name -> ${SignUp._lastName}');
+    _lastName = value.trim();
+    print('Last Name -> $_lastName');
   }
 
   handleUserName(String value) {
-    SignUp._userName = value.trim();
-    print('User Name -> ${SignUp._userName}');
+    _userName = value.trim();
+    print('User Name -> $_userName');
   }
 
   handleEmail(String value) {
-    SignUp._email = value.trim();
-    print('Email -> ${SignUp._email}');
+    _email = value.trim();
+    print('Email -> $_email');
   }
 
   handlePassword(String value) {
-    SignUp._password = value.trim();
-    print('Password -> ${SignUp._password}');
+    _password = value.trim();
+    print('Password -> $_password');
   }
 
   handleRetypePassword(String value) {
-    SignUp._retypePassword = value.trim();
-    print('Password(2) -> ${SignUp._retypePassword}');
+    _retypePassword = value.trim();
+    print('Password(2) -> $_retypePassword');
   }
 
   String validateFirstName(String value) {
@@ -267,10 +271,44 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  Future<bool> serverCall(SingleUserModel user) async {
+    result = await AuthProvider.instance().createUserEmailPass(user);
+    print('This is the result: $result');
+
+    if (result == 'Your password is weak. Please choose another') {
+      return false;
+    } else if (result == "The email format entered is invalid") {
+      return false;
+    } else if (result == "An account with the same email exists") {
+      return false;
+    } else if (result == null) {
+      result = "Please check your internet connection";
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   _signUpBtnPressed() {
     final FormState form = _formKey.currentState;
     if (form.validate()) {
       form.save();
+
+      String fullName = _firstName + " " + _lastName;
+      SingleUserModel user = new SingleUserModel(
+          email: _email,
+          password: _password,
+          name: fullName,
+          username: _userName);
+      serverCall(user).then((value) {
+        if (value) {
+          print(value);
+        } else {
+          dialogInfo(context, result);
+        }
+      }).catchError((error) {
+        dialogInfo(context, error.toString());
+      });
     }
   }
 
@@ -292,52 +330,62 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFEDF0F6),
-      appBar: _appBar(context),
-      body: Container(
-        padding: EdgeInsets.only(top: 40, left: 16, right: 16),
-        height: double.infinity,
-        width: MediaQuery.of(context).size.width,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _intro(),
-                  SizedBox(
-                    height: 30,
+    return Consumer<AuthProvider>(
+      builder: (context, AuthProvider value, child) {
+        userProvider = value;
+        return Scaffold(
+          backgroundColor: Color(0xFFEDF0F6),
+          appBar: _appBar(context),
+          body: Container(
+            padding: EdgeInsets.only(top: 40, left: 16, right: 16),
+            height: double.infinity,
+            width: MediaQuery.of(context).size.width,
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _intro(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      _namesRow(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _userNameTextField(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _emailTextField(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _passwordTextfield(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _retypePasswordTextfield(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      value.status == Status.Authenticating
+                          ? Center(
+                              child: CircularProgressIndicator(
+                              backgroundColor: Theme.of(context).primaryColor,
+                            ))
+                          : _signUpBtn(context),
+                    ],
                   ),
-                  _namesRow(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _userNameTextField(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _emailTextField(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _passwordTextfield(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _retypePasswordTextfield(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _signUpBtn(context),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

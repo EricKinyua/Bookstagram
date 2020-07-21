@@ -8,6 +8,10 @@ service cloud.firestore {
         return request.auth.uid == user;
       }
 
+      function isUserAuthenticated() {
+        return request.auth.uid != null;
+      }
+
       function isUserValid(user) {
         return exists(/databases/$(database)/documents/users/$(user));
       }
@@ -22,6 +26,7 @@ service cloud.firestore {
       match /posts/{post} {
         allow create: if isUserValid(request.resource.data.author);
         allow update, delete: if isPostCreator(request.auth.uid);
+        allow read: if isUserAuthenticated()
       }
     }
   }

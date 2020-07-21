@@ -30,7 +30,6 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int _page = 0;
   PageController _controller;
-
   static dynamic currentUser;
 
   List<BottomNavigationBarItem> items = [
@@ -56,7 +55,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     currentUser = Provider.of<AuthProvider>(context).currentUser;
-    print(currentUser.uid);
     return Scaffold(
       backgroundColor: Color(0xFFEDF0F6),
       body: PageView(
@@ -84,7 +82,9 @@ class _HomepageState extends State<Homepage> {
           },
         ),
       ),
-      floatingActionButton: CustomFab(),
+      floatingActionButton: Consumer<AuthProvider>(
+        builder: (context, AuthProvider value, child) => CustomFab(),
+      ),
     );
   }
 }
