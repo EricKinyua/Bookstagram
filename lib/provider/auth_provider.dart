@@ -1,4 +1,5 @@
 import 'package:Bookstagram/models/single_user_model.dart';
+import 'package:Bookstagram/provider/database_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,11 +16,12 @@ class AuthProvider with ChangeNotifier {
   FirebaseUser currentUser;
   Status _status = Status.Uninitialized;
   final Timestamp now = Timestamp.now();
+  DatabaseProvider database = DatabaseProvider();
 
   AuthProvider.instance() : auth = FirebaseAuth.instance {
     auth.onAuthStateChanged.listen(_onAuthStateChanged);
   }
-  
+
   Status get status => _status;
   FirebaseUser get user => currentUser;
 
@@ -28,12 +30,14 @@ class AuthProvider with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       currentUser = firebaseUser;
+      Future.delayed(Duration(seconds: 1),
+          () => database.setLastLogin(currentUser.uid, now));
       _status = Status.Authenticated;
     }
     notifyListeners();
   }
 
-    /*
+  /*
   USER REGISTRATION
   */
   Future createUserEmailPass(SingleUserModel user) async {
@@ -93,20 +97,7 @@ class AuthProvider with ChangeNotifier {
           email: user.email, password: user.password);
       currentUser = result.user;
 
-      //Check if email is verified before proceeding
-      bool emailVerificationStatus = currentUser.isEmailVerified;
-
-      if (emailVerificationStatus) {
-        await db
-            .collection('users')
-            .document(user.uid)
-            .updateData({'lastLogin': now});
-        return Future.value(currentUser);
-      } else {
-        _status = Status.Unauthenticated;
-        notifyListeners();
-        return 'Please verify your email. We sent you an email earlier';
-      }
+      return Future.value(currentUser);
     } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();

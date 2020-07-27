@@ -15,10 +15,6 @@ function getAdminFirestore() {
     return firebase.initializeAdminApp({projectId: PROJECT_ID}).firestore();
 }
 
-before(async () => {
-    await firebase.clearFirestoreData({projectId: PROJECT_ID});
-});
-
 describe("Bookstagram", () => {
     it ("Understands basic arithmetic", () => {
         assert.equal(1+1,2)
@@ -105,6 +101,18 @@ describe("Bookstagram", () => {
         const db = getFirestore(myAuth)
         const postDoc = db.collection('posts').doc('post_one')
         firebase.assertSucceeds(postDoc.delete())
+    })
+
+    it("Can't allow unauthenticated users to view posts", async () => {
+        const db = getFirestore(null)
+        const postDoc = db.collection('posts').doc('post_one')
+        firebase.assertFails(postDoc.get())
+    })
+
+    it("Can allow authenticated users to view posts", async () => {
+        const db = getFirestore(myAuth)
+        const postDoc = db.collection('posts').doc('post_one')
+        firebase.assertSucceeds(postDoc.get())
     })
     
 })

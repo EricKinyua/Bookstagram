@@ -1,4 +1,12 @@
+import 'dart:io';
+import 'package:Bookstagram/global/utilities/dialogs.dart';
+import 'package:Bookstagram/provider/auth_provider.dart';
+import 'package:Bookstagram/widgets/create_post.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class CustomFab extends StatefulWidget {
   @override
@@ -15,6 +23,12 @@ class _CustomFabState extends State<CustomFab>
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 55;
+
+  File _imageFile;
+  String filePath, urlResult;
+  String uid;
+  StorageUploadTask storageUploadTask;
+  StorageTaskSnapshot taskSnapshot;
 
   animate() {
     if (!isOpened) {
@@ -65,7 +79,7 @@ class _CustomFabState extends State<CustomFab>
   Widget galleryBtn() {
     return Container(
       child: FloatingActionButton(
-        onPressed: null,
+        onPressed: galleryBtnPressed,
         heroTag: 'gallery',
         tooltip: 'Gallery',
         child: Icon(Icons.storage),
@@ -73,10 +87,67 @@ class _CustomFabState extends State<CustomFab>
     );
   }
 
+  Future<String> startUpload(File file) async {
+    /// Unique file name for the file
+    DateTime now = DateTime.now();
+    filePath = 'posts/$uid/${now.toLocal()}.png';
+    //Create a storage reference
+    StorageReference reference = FirebaseStorage.instance.ref().child(filePath);
+    //Create a task that will handle the upload
+    storageUploadTask = reference.putFile(
+      file,
+    );
+    taskSnapshot = await storageUploadTask.onComplete;
+    urlResult = await taskSnapshot.ref.getDownloadURL();
+    return urlResult;
+  }
+
+  /// Select an image via gallery or camera
+  Future<void> pickImage(ImageSource source) async {
+    await ImagePicker.pickImage(source: source).then((value) {
+      if (value != null) {
+        setState(() {
+          _imageFile = value;
+        });
+
+        ///   _changePic();
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return CreatePost(
+              file: _imageFile,
+              uid: uid,
+            );
+          },
+        );
+      }
+    });
+  }
+
+  Future _changePic() async {
+    startUpload(_imageFile).then((value) {
+      Firestore.instance
+          .collection("posts")
+          .document()
+          .setData({"post": value, "author": uid, 'time': DateTime.now()});
+    }).then((value) {
+      dialogInfo(context, 'Your post has been created');
+    });
+  }
+
+  void galleryBtnPressed() {
+    pickImage(ImageSource.gallery);
+  }
+
+  void cameraBtnPressed() {
+    pickImage(ImageSource.camera);
+  }
+
   Widget cameraBtn() {
     return Container(
       child: FloatingActionButton(
-        onPressed: null,
+        onPressed: cameraBtnPressed,
         heroTag: 'camera',
         tooltip: 'Camera',
         child: Icon(Icons.camera),
@@ -86,6 +157,7 @@ class _CustomFabState extends State<CustomFab>
 
   @override
   Widget build(BuildContext context) {
+    uid = Provider.of<AuthProvider>(context).currentUser.uid;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [

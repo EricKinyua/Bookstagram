@@ -1,10 +1,19 @@
-import 'package:Bookstagram/models/single_post_model.dart';
+
 import 'package:Bookstagram/provider/auth_provider.dart';
-import 'package:Bookstagram/widgets/singlePost.dart';
+import 'package:Bookstagram/provider/database_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  Future documents;
+  DatabaseProvider database = DatabaseProvider();
+
   Widget _appBar() {
     return AppBar(
       backgroundColor: Color(0xFFEDF0F6),
@@ -27,11 +36,34 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _body() {
-    return ListView.builder(
-      addAutomaticKeepAlives: false,
-      itemCount: posts.length,
-      itemBuilder: (context, index) => SinglePostWidget(model: posts[index]),
+    return FutureBuilder<List<DocumentSnapshot>>(
+      future: documents,
+      builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+        print(snapshot.data);
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          case ConnectionState.done:
+            return ListView.builder(
+                addAutomaticKeepAlives: false,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) =>
+                    Image.network('${snapshot.data[index].data['post']}'));
+          default:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+        }
+      },
     );
+  }
+
+  @override
+  void initState() {
+    documents = database.getAllPosts();
+    super.initState();
   }
 
   @override
