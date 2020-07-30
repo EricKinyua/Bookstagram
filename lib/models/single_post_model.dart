@@ -1,34 +1,34 @@
-import 'package:Bookstagram/models/single_book_model.dart';
-import 'package:Bookstagram/models/single_comment_model.dart';
 import 'package:Bookstagram/models/single_user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SinglePostModel {
   SingleUserModel user;
-  SingleBookModel book;
-  List<SingleCommentModel> comments;
-  int likes;
+  Map<String, dynamic> book;
+  List<dynamic> comments;
+  int likes = 0;
+  String author;
+  final Timestamp time = Timestamp.now();
 
-  SinglePostModel({this.user, this.book, this.comments, this.likes});
+  SinglePostModel(
+      {this.user, this.book, this.comments, this.author, this.likes});
+
+  factory SinglePostModel.fromFirestore(DocumentSnapshot documentSnapshot) {
+    Map data = documentSnapshot.data;
+    SingleUserModel user = new SingleUserModel(
+        name: data['user']['name'], photoUrl: data['user']['photoUrl']);
+    return SinglePostModel(
+        author: data['author'],
+        book: data['book'],
+        comments: data['comments'],
+        likes: data['likes'],
+        user: user);
+  }
+
+  Map<String, dynamic> toFirestore() => {
+        'book': book,
+        'comments': comments,
+        'likes': likes,
+        'author': author,
+        'time': time
+      };
 }
-
-SingleUserModel userOne = new SingleUserModel(
-    email: 'userOne@email.com',
-    name: 'User One',
-    password: '12345',
-    photoUrl:
-        'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80');
-
-
-
-SingleCommentModel commentOne =
-    new SingleCommentModel(text: 'This is my first comment', user: userOne);
-
-SingleCommentModel commentTwo =
-    new SingleCommentModel(text: 'This is my second comment', user: userOne);
-
-List<SingleCommentModel> comments = [commentOne, commentTwo];
-
-SinglePostModel postOne = new SinglePostModel(
-    book: null, comments: comments, user: userOne, likes: 2515);
-
-List<SinglePostModel> posts = [postOne, postOne, postOne];

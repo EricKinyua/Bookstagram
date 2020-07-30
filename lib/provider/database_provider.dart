@@ -1,3 +1,4 @@
+import 'package:Bookstagram/models/single_post_model.dart';
 import 'package:Bookstagram/models/single_user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -27,6 +28,14 @@ class DatabaseProvider {
         .document(uid)
         .snapshots()
         .map((event) => SingleUserModel.fromFirestore(event));
+  }
+
+  Future<void> createPost(SinglePostModel post) async {
+    try {
+      await _db.collection('posts').document().setData(post.toFirestore());
+    } catch (e) {
+      throw e.toString();
+    }
   }
 
   Future<List<DocumentSnapshot>> getAllPosts() async {

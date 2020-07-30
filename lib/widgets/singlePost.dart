@@ -9,6 +9,7 @@ class SinglePostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(model.toFirestore());
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Container(
@@ -40,7 +41,9 @@ class SinglePostWidget extends StatelessWidget {
                           child: Image(
                             height: 50,
                             width: 50,
-                            image: NetworkImage(model.user.photoUrl),
+                            image: model.user.photoUrl == null
+                                ? AssetImage('assets/logos/google.png')
+                                : NetworkImage(model.user.photoUrl),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -62,7 +65,7 @@ class SinglePostWidget extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(SlideLeftTransition(
                         page: Comments(
                       model: model.comments,
-                      user: userOne,
+                      user: model.user,
                     ))),
                     child: Container(
                       margin: EdgeInsets.all(10),
@@ -78,7 +81,7 @@ class SinglePostWidget extends StatelessWidget {
                           ),
                         ],
                         image: DecorationImage(
-                          image: NetworkImage(model.book.bookUrl),
+                          image: NetworkImage(model.book['bookUrl']),
                           fit: BoxFit.fitWidth,
                         ),
                       ),
@@ -115,12 +118,11 @@ class SinglePostWidget extends StatelessWidget {
                                 IconButton(
                                   icon: Icon(Icons.chat),
                                   iconSize: 30,
-                                  onPressed: () => Navigator.of(context)
-                                      .push(SlideLeftTransition(
+                                  onPressed: () => Navigator.of(context).push(
+                                      SlideLeftTransition(
                                           page: Comments(
-                                    model: model.comments,
-                                    user: userOne,
-                                  ))),
+                                              model: model.comments,
+                                              user: model.user))),
                                 ),
                                 Text(
                                   "${model.comments.length}",

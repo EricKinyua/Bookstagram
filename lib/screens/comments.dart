@@ -3,7 +3,7 @@ import 'package:Bookstagram/models/single_user_model.dart';
 import 'package:flutter/material.dart';
 
 class Comments extends StatefulWidget {
-  final List<SingleCommentModel> model;
+  final List<dynamic> model;
   final SingleUserModel user;
   Comments({@required this.model, @required this.user});
 
@@ -77,7 +77,9 @@ class _CommentsState extends State<Comments> {
                 child: Image(
                   height: 50,
                   width: 50,
-                  image: NetworkImage(widget.user.photoUrl),
+                  image: widget.user.photoUrl == null
+                      ? AssetImage('assets/logos/google.png')
+                      : NetworkImage(widget.user.photoUrl),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -1,8 +1,11 @@
-// import * as functions from 'firebase-functions';
+import * as superadmin from 'firebase-admin'
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+superadmin.initializeApp()
+
+import * as posts from './posts'
+
+export const db = superadmin.firestore()
+
+exports.PostCreated = posts.onCreatePost
+
+
