@@ -7,18 +7,22 @@ export const onCreatePost = functions.region('europe-west3').firestore
         const author: string = snapshot.get('author')
         const id: string = snapshot.id
 
-        //Retrieve details of author -> name and photoUrl
-        const authorDoc: FirebaseFirestore.DocumentSnapshot = await db.collection('users').doc(author).get()
-        const name: string = authorDoc.get('name')
-        const photo: string | null = authorDoc.get('photoUrl')
+        try {
+            //Retrieve details of author -> name and photoUrl
+            const authorDoc = await db.collection('users').doc(author).get()
+            const name: string = authorDoc.get('name')
+            const photo: string | null = authorDoc.get('photoUrl')
 
-        //Add those details to the post under 'user'
-        await db.collection('posts').doc(id).update({
-            user: {
-                name: name,
-                photoUrl: photo
-            }
-        })
+            //Add those details to the post under 'user'
+            await db.collection('posts').doc(id).update({
+                user: {
+                    name: name,
+                    photoUrl: photo
+                }
+            })
 
-        console.log('The post has been added successfully')
+            console.log('The post has been added successfully')
+        } catch (error) {
+            console.error(error)
+        }
     })

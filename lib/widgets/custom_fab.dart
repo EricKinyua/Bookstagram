@@ -23,6 +23,7 @@ class _CustomFabState extends State<CustomFab>
   double _fabHeight = 55;
 
   File _imageFile;
+  final picker = ImagePicker();
   String uid;
 
   StorageProvider storageProvider = StorageProvider();
@@ -86,10 +87,10 @@ class _CustomFabState extends State<CustomFab>
 
   /// Select an image via gallery or camera
   Future<void> pickImage(ImageSource source) async {
-    await ImagePicker.pickImage(source: source).then((value) {
+    picker.getImage(source: source).then((value) {
       if (value != null) {
         setState(() {
-          _imageFile = value;
+          _imageFile = File(value.path);
         });
 
         showDialog(

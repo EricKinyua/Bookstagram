@@ -10,17 +10,18 @@ import 'package:provider/provider.dart';
 class Homepage extends StatefulWidget {
   static BottomNavigationBarItem _bottomNavItem(String title, IconData icon) {
     return BottomNavigationBarItem(
-        icon: Icon(
-          icon,
-          size: 24,
-          color: Colors.black,
-        ),
-        activeIcon: Icon(
-          icon,
-          size: 30,
-          color: Colors.blue,
-        ),
-        title: Text(title));
+      icon: Icon(
+        icon,
+        size: 24,
+        color: Colors.black,
+      ),
+      activeIcon: Icon(
+        icon,
+        size: 30,
+        color: Colors.blue,
+      ),
+      label: title,
+    );
   }
 
   @override
